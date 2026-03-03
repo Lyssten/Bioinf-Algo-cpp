@@ -1,0 +1,1 @@
+add_executable(approximate_pattern_matching main.cpp)

@@ -1,0 +1,1 @@
+add_executable(randomized_motif_search main.cpp)

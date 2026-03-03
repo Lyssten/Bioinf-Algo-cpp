@@ -1,0 +1,1 @@
+add_executable(distance_pattern_strings main.cpp)
