@@ -38,18 +38,32 @@ cpp/
 
 ## Сборка
 
+Все задачи собираются одной командой из корня проекта:
+
 ```bash
+# 1. Перейти в корень проекта
 cd cpp
-mkdir build && cd build
+
+# 2. Создать директорию для сборки и собрать
+mkdir -p build && cd build
 cmake ..
-make
+make -j$(nproc)
 ```
+
+После сборки исполняемые файлы появляются внутри `build/` с зеркальной структурой:
+```
+build/lectures/lecture_XX/<task>/<task>
+```
+
+Директория `build/` добавлена в `.gitignore` — после клонирования репозитория её нужно пересобрать.
 
 ## Запуск
 
-Все исполняемые файлы в `build/lectures/lecture_XX/<task>/`
+Все команды выполняются из директории `build/`:
 
 ```bash
+cd build
+
 # Lecture 01
 ./lectures/lecture_01/pattern_count/pattern_count "GCGCG" "GCG"
 ./lectures/lecture_01/reverse_complement/reverse_complement "AAAACCCGGT"
@@ -77,6 +91,8 @@ make
 ./lectures/lecture_03/randomized_motif_search/randomized_motif_search 8 5 "dna1" "dna2" ...
 ./lectures/lecture_03/gibbs_sampler/gibbs_sampler 8 5 100 "dna1" "dna2" ...
 ```
+
+Без аргументов каждая программа запускается с тестовыми данными из условия задачи.
 
 ## Добавление нового занятия
 
