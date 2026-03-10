@@ -1,8 +1,23 @@
+#include <algorithm>
+#include <climits>
+#include <fstream>
 #include <iostream>
+#include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <random>
-#include <climits>
+
+struct RandomizedMotifSearchInput {
+    size_t k;
+    size_t t;
+    std::vector<std::string> dna;
+};
+
+struct CliOptions {
+    std::string inputPath;
+    std::string outputPath;
+    std::vector<std::string> positional;
+};
 
 int nucleotideIndex(char c) {
     switch (c) {
@@ -25,9 +40,10 @@ std::vector<std::vector<double>> buildProfileWithPseudocounts(const std::vector<
     }
 
     double total = static_cast<double>(t) + 4.0;
-    for (size_t i = 0; i < 4; ++i)
+    for (size_t i = 0; i < 4; ++i) {
         for (size_t j = 0; j < k; ++j)
             profile[i][j] /= total;
+    }
 
     return profile;
 }
@@ -43,6 +59,7 @@ std::string profileMostProbable(const std::string& text, size_t k,
                                 const std::vector<std::vector<double>>& profile) {
     double maxProb = -1.0;
     std::string bestKmer = text.substr(0, k);
+
     for (size_t i = 0; i <= text.size() - k; ++i) {
         std::string kmer = text.substr(i, k);
         double prob = probability(kmer, profile);
@@ -51,33 +68,35 @@ std::string profileMostProbable(const std::string& text, size_t k,
             bestKmer = kmer;
         }
     }
+
     return bestKmer;
 }
 
 int score(const std::vector<std::string>& motifs) {
     size_t k = motifs[0].size();
     int totalScore = 0;
+
     for (size_t j = 0; j < k; ++j) {
         int count[4] = {0, 0, 0, 0};
         for (const auto& motif : motifs)
             ++count[nucleotideIndex(motif[j])];
+
         int maxCount = 0;
-        for (int i = 0; i < 4; ++i)
-            maxCount = std::max(maxCount, count[i]);
+        for (int value : count)
+            maxCount = std::max(maxCount, value);
+
         totalScore += static_cast<int>(motifs.size()) - maxCount;
     }
+
     return totalScore;
 }
 
-// Одна итерация RandomizedMotifSearch
 std::vector<std::string> randomizedMotifSearchOnce(const std::vector<std::string>& dna,
-                                                    size_t k, size_t t, std::mt19937& rng) {
-    // Случайно выбираем начальные k-меры
+                                                   size_t k, size_t t, std::mt19937& rng) {
     std::vector<std::string> motifs;
     for (size_t i = 0; i < t; ++i) {
         std::uniform_int_distribution<size_t> dist(0, dna[i].size() - k);
-        size_t pos = dist(rng);
-        motifs.push_back(dna[i].substr(pos, k));
+        motifs.push_back(dna[i].substr(dist(rng), k));
     }
 
     std::vector<std::string> bestMotifs = motifs;
@@ -94,47 +113,191 @@ std::vector<std::string> randomizedMotifSearchOnce(const std::vector<std::string
     }
 }
 
-// Запускаем 1000 раз и берём лучший результат
 std::vector<std::string> randomizedMotifSearch(const std::vector<std::string>& dna,
-                                                size_t k, size_t t) {
+                                               size_t k, size_t t) {
     std::mt19937 rng(42);
     std::vector<std::string> bestMotifs;
     int bestScore = INT_MAX;
 
     for (int iter = 0; iter < 1000; ++iter) {
         auto motifs = randomizedMotifSearchOnce(dna, k, t, rng);
-        int s = score(motifs);
-        if (s < bestScore) {
-            bestScore = s;
+        int currentScore = score(motifs);
+        if (currentScore < bestScore) {
+            bestScore = currentScore;
             bestMotifs = motifs;
         }
     }
+
     return bestMotifs;
 }
 
-int main(int argc, char* argv[]) {
-    size_t k = 8, t = 5;
-    std::vector<std::string> dna = {
-        "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA",
-        "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
-        "TAGTACCGAGACCGAAAGAAGTATACAGGCGT",
-        "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
-        "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+RandomizedMotifSearchInput sampleInput() {
+    return {
+        8,
+        5,
+        {
+            "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA",
+            "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
+            "TAGTACCGAGACCGAAAGAAGTATACAGGCGT",
+            "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
+            "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+        }
     };
+}
 
-    if (argc >= 3) {
-        k = std::stoul(argv[1]);
-        t = std::stoul(argv[2]);
-        dna.clear();
-        for (int i = 3; i < argc; ++i)
-            dna.push_back(argv[i]);
-    } else {
-        std::cout << "No arguments provided. Using sample dataset...\n";
+bool isReadableFile(const std::string& path) {
+    std::ifstream input(path);
+    return input.good();
+}
+
+size_t parseSizeT(const std::string& value, const std::string& name) {
+    size_t pos = 0;
+    unsigned long parsed = 0;
+
+    try {
+        parsed = std::stoul(value, &pos);
+    } catch (const std::exception&) {
+        throw std::invalid_argument("Invalid numeric value for " + name + ": " + value);
     }
 
-    auto motifs = randomizedMotifSearch(dna, k, t);
-    for (const auto& m : motifs)
-        std::cout << m << std::endl;
+    if (pos != value.size())
+        throw std::invalid_argument("Invalid numeric value for " + name + ": " + value);
 
-    return 0;
+    return static_cast<size_t>(parsed);
+}
+
+CliOptions parseCli(int argc, char* argv[]) {
+    CliOptions options;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+
+        if (arg == "--input" || arg == "-i") {
+            if (i + 1 >= argc)
+                throw std::invalid_argument("Missing value after --input");
+            options.inputPath = argv[++i];
+            continue;
+        }
+
+        if (arg == "--output" || arg == "-o") {
+            if (i + 1 >= argc)
+                throw std::invalid_argument("Missing value after --output");
+            options.outputPath = argv[++i];
+            continue;
+        }
+
+        options.positional.push_back(arg);
+    }
+
+    if (options.inputPath.empty() && options.positional.size() == 1 &&
+        isReadableFile(options.positional[0])) {
+        options.inputPath = options.positional[0];
+        options.positional.clear();
+    }
+
+    if (!options.inputPath.empty() && !options.positional.empty())
+        throw std::invalid_argument("Use either Rosalind-style positional arguments or an input file, not both");
+
+    return options;
+}
+
+RandomizedMotifSearchInput parseInputFile(const std::string& path) {
+    std::ifstream input(path);
+    if (!input)
+        throw std::runtime_error("Cannot open input file: " + path);
+
+    RandomizedMotifSearchInput data{};
+    if (!(input >> data.k >> data.t))
+        throw std::runtime_error("Expected first line in Rosalind format: k t");
+
+    std::string dnaString;
+    while (input >> dnaString)
+        data.dna.push_back(dnaString);
+
+    return data;
+}
+
+RandomizedMotifSearchInput parsePositionalArgs(const std::vector<std::string>& positional) {
+    if (positional.size() < 3)
+        throw std::invalid_argument("Expected Rosalind-style arguments: k t dna1 dna2 ...");
+
+    RandomizedMotifSearchInput data{};
+    data.k = parseSizeT(positional[0], "k");
+    data.t = parseSizeT(positional[1], "t");
+    data.dna.assign(positional.begin() + 2, positional.end());
+    return data;
+}
+
+void validateInput(const RandomizedMotifSearchInput& data) {
+    if (data.k == 0)
+        throw std::invalid_argument("k must be greater than 0");
+    if (data.t == 0)
+        throw std::invalid_argument("t must be greater than 0");
+    if (data.dna.empty())
+        throw std::invalid_argument("At least one DNA string is required");
+    if (data.dna.size() != data.t) {
+        throw std::invalid_argument(
+            "The number of DNA strings does not match t: expected " + std::to_string(data.t) +
+            ", got " + std::to_string(data.dna.size())
+        );
+    }
+
+    for (size_t i = 0; i < data.dna.size(); ++i) {
+        if (data.dna[i].size() < data.k) {
+            throw std::invalid_argument(
+                "DNA string #" + std::to_string(i + 1) + " is shorter than k"
+            );
+        }
+    }
+}
+
+std::string resolveOutputPath(const CliOptions& options) {
+    if (!options.outputPath.empty())
+        return options.outputPath;
+    if (!options.inputPath.empty())
+        return options.inputPath + ".out";
+    return "randomized_motif_search_output.txt";
+}
+
+void writeOutputFile(const std::vector<std::string>& motifs, const std::string& outputPath) {
+    std::ofstream output(outputPath);
+    if (!output)
+        throw std::runtime_error("Cannot open output file: " + outputPath);
+
+    for (const auto& motif : motifs)
+        output << motif << '\n';
+}
+
+int main(int argc, char* argv[]) {
+    try {
+        CliOptions options = parseCli(argc, argv);
+        RandomizedMotifSearchInput input = sampleInput();
+
+        if (!options.inputPath.empty()) {
+            input = parseInputFile(options.inputPath);
+        } else if (!options.positional.empty()) {
+            input = parsePositionalArgs(options.positional);
+        } else {
+            std::cerr << "No input provided. Using sample dataset.\n";
+        }
+
+        validateInput(input);
+
+        auto motifs = randomizedMotifSearch(input.dna, input.k, input.t);
+        std::string outputPath = resolveOutputPath(options);
+        writeOutputFile(motifs, outputPath);
+
+        for (const auto& motif : motifs)
+            std::cout << motif << '\n';
+
+        std::cerr << "Saved output to " << outputPath << '\n';
+        return 0;
+    } catch (const std::exception& error) {
+        std::cerr << "Error: " << error.what() << '\n';
+        std::cerr << "Usage:\n";
+        std::cerr << "  ./randomized_motif_search [--input input.txt] [--output output.txt]\n";
+        std::cerr << "  ./randomized_motif_search [--output output.txt] k t dna1 dna2 ... dna_t\n";
+        std::cerr << "  ./randomized_motif_search input.txt [--output output.txt]\n";
+        return 1;
+    }
 }

@@ -4,8 +4,30 @@
 
 Найти набор мотивов жадным алгоритмом с использованием псевдосчётчиков Лапласа.
 
-**Вход:** целые числа k, t и набор строк Dna
+**Вход:** целые числа `k`, `t` и набор строк `Dna`
 **Выход:** набор k-меров (по одному из каждой строки), минимизирующий счёт
+
+Где:
+- `k` — длина искомого мотива
+- `t` — количество строк в коллекции `Dna`
+- `Dna` — набор ДНК-строк
+
+Формат входного файла Rosalind:
+```text
+k t
+dna1
+dna2
+...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `k t dna1 dna2 ... dna_t`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `greedy_motif_search_output.txt`
 
 **Пример:**
 ```
@@ -131,7 +153,15 @@ motifs.push_back(profileMostProbable(dna[j], k, profile));
 ## Запуск
 
 ```bash
-./greedy_motif_search 3 5 "GGCGTTCAGGCA" "AAGAATCAGTCA" "CAAGGAGTTCGC" "CACGTCAATCAC" "CAATAATATTCG"
+# Rosalind-style аргументы
+./greedy_motif_search --output answer.txt 3 5 \
+  "GGCGTTCAGGCA" "AAGAATCAGTCA" "CAAGGAGTTCGC" "CACGTCAATCAC" "CAATAATATTCG"
+
+# Входной файл в формате Rosalind
+./greedy_motif_search --input rosalind_ba2e.txt --output rosalind_ba2e.out
+
+# Короткая форма: один путь трактуется как входной файл
+./greedy_motif_search rosalind_ba2e.txt
 ```
 
 ## Сложность

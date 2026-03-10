@@ -44,25 +44,22 @@ cpp/
 # 1. Перейти в корень проекта
 cd cpp
 
-# 2. Создать директорию для сборки и собрать
-mkdir -p build && cd build
-cmake ..
-make -j$(nproc)
+# 2. Сконфигурировать скрытую служебную директорию и собрать
+cmake -S . -B .cmake-build
+cmake --build .cmake-build -j$(nproc)
 ```
 
-После сборки исполняемые файлы появляются внутри `build/` с зеркальной структурой:
+Служебные файлы CMake складываются в `.cmake-build/`, а исполняемые файлы появляются сразу в директориях задач:
 ```
-build/lectures/lecture_XX/<task>/<task>
+lectures/lecture_XX/<task>/<task>
 ```
-
-Директория `build/` добавлена в `.gitignore` — после клонирования репозитория её нужно пересобрать.
 
 ## Запуск
 
-Все команды выполняются из директории `build/`:
+Все команды выполняются из корня проекта:
 
 ```bash
-cd build
+cd cpp
 
 # Lecture 01
 ./lectures/lecture_01/pattern_count/pattern_count "GCGCG" "GCG"
@@ -83,14 +80,16 @@ cd build
 ./lectures/lecture_02/frequent_words_mismatches_complements/frequent_words_mismatches_complements "<text>" 4 1
 
 # Lecture 03
-./lectures/lecture_03/motif_enumeration/motif_enumeration 3 1 "ATTTGGC" "TGCCTTA" "CGGTATC" "GAAAATT"
-./lectures/lecture_03/median_string/median_string 3 "AAATTGACGCAT" "GACGACCACGTT" "CGTCAGCGCCTG"
-./lectures/lecture_03/profile_most_probable/profile_most_probable "<text>" 5 "0.2 0.2 ..." "0.4 0.3 ..." "0.3 0.3 ..." "0.1 0.2 ..."
-./lectures/lecture_03/distance_pattern_strings/distance_pattern_strings "AAA" "TTACCTTAAC GATATCTGTC ..."
-./lectures/lecture_03/greedy_motif_search/greedy_motif_search 3 5 "dna1" "dna2" ...
-./lectures/lecture_03/randomized_motif_search/randomized_motif_search 8 5 "dna1" "dna2" ...
-./lectures/lecture_03/gibbs_sampler/gibbs_sampler 8 5 100 "dna1" "dna2" ...
+./lectures/lecture_03/motif_enumeration/motif_enumeration lectures/lecture_03/motif_enumeration/rosalind_ba2a.txt
+./lectures/lecture_03/median_string/median_string lectures/lecture_03/median_string/rosalind_ba2b.txt
+./lectures/lecture_03/profile_most_probable/profile_most_probable lectures/lecture_03/profile_most_probable/rosalind_ba2c.txt
+./lectures/lecture_03/distance_pattern_strings/distance_pattern_strings lectures/lecture_03/distance_pattern_strings/rosalind_ba2h.txt
+./lectures/lecture_03/greedy_motif_search/greedy_motif_search lectures/lecture_03/greedy_motif_search/rosalind_ba2e.txt
+./lectures/lecture_03/randomized_motif_search/randomized_motif_search lectures/lecture_03/randomized_motif_search/rosalind_ba2f.txt
+./lectures/lecture_03/gibbs_sampler/gibbs_sampler lectures/lecture_03/gibbs_sampler/rosalind_ba2g.txt
 ```
+
+Начиная с `lecture_03`, задачи принимают Rosalind-вход через `--input <path>` или просто путь к файлу как единственный аргумент. При необходимости можно явно задать выходной файл через `--output <path>`.
 
 Без аргументов каждая программа запускается с тестовыми данными из условия задачи.
 
@@ -102,7 +101,8 @@ cd build
    ```cmake
    add_executable(<name> main.cpp)
    ```
-4. Добавьте `add_subdirectory` в корневой `CMakeLists.txt`
+4. Для новых задач по умолчанию реализуйте Rosalind-style ввод через файл и файловый вывод результата
+5. Добавьте `add_subdirectory` в корневой `CMakeLists.txt`
 
 ## Занятия
 

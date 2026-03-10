@@ -1,5 +1,6 @@
 # Build
 build/
+.cmake-build/
 cmake-build-*/
 
 # IDE
@@ -15,3 +16,30 @@ cmake-build-*/
 *.so
 *.exe
 *.dll
+
+# Task binaries
+lectures/lecture_01/pattern_count/pattern_count
+lectures/lecture_01/reverse_complement/reverse_complement
+lectures/lecture_01/frequent_words/frequent_words
+lectures/lecture_01/pattern_matching/pattern_matching
+lectures/lecture_01/clump_finding/clump_finding
+lectures/lecture_01/minimum_skew/minimum_skew
+lectures/lecture_01/hamming_distance/hamming_distance
+lectures/lecture_01/frequent_words_mismatches/frequent_words_mismatches
+lectures/lecture_02/pattern_to_number/pattern_to_number
+lectures/lecture_02/number_to_pattern/number_to_pattern
+lectures/lecture_02/approximate_pattern_matching/approximate_pattern_matching
+lectures/lecture_02/frequency_array/frequency_array
+lectures/lecture_02/d_neighborhood/d_neighborhood
+lectures/lecture_02/frequent_words_mismatches_complements/frequent_words_mismatches_complements
+lectures/lecture_03/motif_enumeration/motif_enumeration
+lectures/lecture_03/median_string/median_string
+lectures/lecture_03/profile_most_probable/profile_most_probable
+lectures/lecture_03/distance_pattern_strings/distance_pattern_strings
+lectures/lecture_03/greedy_motif_search/greedy_motif_search
+lectures/lecture_03/randomized_motif_search/randomized_motif_search
+lectures/lecture_03/gibbs_sampler/gibbs_sampler
+
+# Generated answer files
+lectures/**/rosalind_*.out
+lectures/**/rosalind_*.txt.out

@@ -4,8 +4,28 @@
 
 Вычислить суммарное расстояние между паттерном и коллекцией строк.
 
-**Вход:** строка Pattern и набор строк Dna
-**Выход:** d(Pattern, Dna) — сумма минимальных расстояний Хэмминга
+**Вход:** строка `Pattern` и набор строк `Dna`
+**Выход:** `d(Pattern, Dna)` — сумма минимальных расстояний Хэмминга
+
+Где:
+- `Pattern` — k-мер, расстояние до которого измеряется
+- `Dna` — коллекция ДНК-строк
+- `d(Pattern, Dna)` — сумма минимальных расстояний между `Pattern` и каждой строкой из `Dna`
+
+Формат входного файла Rosalind:
+```text
+Pattern
+dna1 dna2 dna3 ...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `Pattern dna1 dna2 ...`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `distance_pattern_strings_output.txt`
 
 **Пример:**
 ```
@@ -119,8 +139,15 @@ while (iss >> s)
 ## Запуск
 
 ```bash
-./distance_pattern_strings "AAA" "TTACCTTAAC GATATCTGTC ACGGCGTTCG CCCTAAAGAG CGTCAGAGGT"
-# Вывод: 5
+# Rosalind-style аргументы
+./distance_pattern_strings --output answer.txt \
+  "AAA" "TTACCTTAAC" "GATATCTGTC" "ACGGCGTTCG" "CCCTAAAGAG" "CGTCAGAGGT"
+
+# Входной файл в формате Rosalind
+./distance_pattern_strings --input rosalind_ba2h.txt --output rosalind_ba2h.out
+
+# Короткая форма: один путь трактуется как входной файл
+./distance_pattern_strings rosalind_ba2h.txt
 ```
 
 ## Сложность

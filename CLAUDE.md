@@ -11,7 +11,7 @@ cpp/
 ├── CMakeLists.txt              # Корневой CMake (C++17, добавляет все subdirectory)
 ├── README.md                    # Документация проекта (русский)
 ├── CLAUDE.md                    # ← этот файл
-├── .gitignore                   # build/, IDE, *.o, *.so, *.exe
+├── .gitignore                   # .cmake-build/, task binaries, IDE, *.o, *.so, *.exe
 └── lectures/
     ├── LECTURE_TEMPLATE.md       # Шаблон для новых лекций
     ├── lecture_01/               # Строковые алгоритмы (8 задач)
@@ -50,30 +50,41 @@ task_name/
 | Профильная матрица | `std::vector<std::vector<double>>` |
 
 ### Паттерн main()
+Начиная с `lecture_03` и для всех следующих лекций по умолчанию поддерживаем Rosalind-style ввод из файла.
+
+Минимальный контракт CLI:
+- `--input <path>` или один positional-аргумент `<path>` — входной файл в формате Rosalind
+- `--output <path>` — путь для файла с ответом
+- positional-аргументы тоже допустимы, но в порядке, совпадающем с форматом Rosalind
+- без аргументов программа может падать обратно на sample dataset
+
 ```cpp
 int main(int argc, char* argv[]) {
-    // Значения по умолчанию (sample dataset)
-    std::string text = "SAMPLE";
-    size_t k = 4;
+    try {
+        CliOptions options = parseCli(argc, argv);
+        InputData input = sampleInput();
 
-    // Парсинг CLI
-    if (argc == N) {
-        text = argv[1];
-        k = std::stoul(argv[2]);
-    } else {
-        std::cout << "No arguments provided. Using sample dataset...\n";
+        if (!options.inputPath.empty()) {
+            input = parseInputFile(options.inputPath);
+        } else if (!options.positional.empty()) {
+            input = parsePositionalArgs(options.positional);
+        } else {
+            std::cerr << "No input provided. Using sample dataset.\n";
+        }
+
+        validateInput(input);
+        auto result = solve(input);
+
+        std::string outputPath = resolveOutputPath(options);
+        writeOutputFile(result, outputPath);
+
+        printResult(result);
+        std::cerr << "Saved output to " << outputPath << '\n';
+        return 0;
+    } catch (const std::exception& error) {
+        std::cerr << "Error: " << error.what() << '\n';
+        return 1;
     }
-
-    // Вычисление
-    auto result = solve(text, k);
-
-    // Вывод (пробелы между элементами, endl в конце)
-    for (size_t i = 0; i < result.size(); ++i) {
-        if (i > 0) std::cout << " ";
-        std::cout << result[i];
-    }
-    std::cout << std::endl;
-    return 0;
 }
 ```
 
@@ -127,10 +138,12 @@ int main(int argc, char* argv[]) {
 ## Сборка
 
 ```bash
-cd cpp && mkdir -p build && cd build && cmake .. && make -j$(nproc)
+cd cpp && cmake -S . -B .cmake-build && cmake --build .cmake-build -j$(nproc)
 ```
 
-Бинарники: `build/lectures/lecture_XX/task_name/task_name`
+Служебные файлы CMake: `.cmake-build/`
+
+Бинарники: `lectures/lecture_XX/task_name/task_name`
 
 ## Добавление новой лекции
 

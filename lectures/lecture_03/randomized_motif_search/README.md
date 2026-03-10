@@ -4,8 +4,30 @@
 
 Найти набор мотивов рандомизированным алгоритмом.
 
-**Вход:** целые числа k, t и набор строк Dna
-**Выход:** набор мотивов, найденный за 1000 запусков RandomizedMotifSearch
+**Вход:** целые числа `k`, `t` и набор строк `Dna`
+**Выход:** набор мотивов, найденный за 1000 запусков `RandomizedMotifSearch`
+
+Где:
+- `k` — длина искомого мотива
+- `t` — количество строк в коллекции `Dna`
+- `Dna` — набор ДНК-строк
+
+Формат входного файла Rosalind:
+```text
+k t
+dna1
+dna2
+...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `k t dna1 dna2 ... dna_t`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `randomized_motif_search_output.txt`
 
 **Пример:**
 ```
@@ -144,7 +166,19 @@ std::vector<std::string> randomizedMotifSearchOnce(..., std::mt19937& rng)
 ## Запуск
 
 ```bash
-./randomized_motif_search 8 5 "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA" "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG" ...
+# Rosalind-style аргументы
+./randomized_motif_search --output answer.txt 8 5 \
+  "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA" \
+  "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG" \
+  "TAGTACCGAGACCGAAAGAAGTATACAGGCGT" \
+  "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC" \
+  "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+
+# Входной файл в формате Rosalind
+./randomized_motif_search --input rosalind_ba2f.txt --output rosalind_ba2f.out
+
+# Короткая форма: один путь трактуется как входной файл
+./randomized_motif_search rosalind_ba2f.txt
 ```
 
 ## Сложность

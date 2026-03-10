@@ -1,8 +1,24 @@
+#include <algorithm>
+#include <climits>
+#include <fstream>
 #include <iostream>
+#include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <random>
-#include <climits>
+
+struct GibbsInput {
+    size_t k;
+    size_t t;
+    size_t N;
+    std::vector<std::string> dna;
+};
+
+struct CliOptions {
+    std::string inputPath;
+    std::string outputPath;
+    std::vector<std::string> positional;
+};
 
 int nucleotideIndex(char c) {
     switch (c) {
@@ -131,30 +147,177 @@ std::vector<std::string> gibbsSampler(const std::vector<std::string>& dna,
     return bestMotifs;
 }
 
-int main(int argc, char* argv[]) {
-    size_t k = 8, t = 5, N = 100;
-    std::vector<std::string> dna = {
-        "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA",
-        "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
-        "TAGTACCGAGACCGAAAGAAGTATACAGGCGT",
-        "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
-        "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+GibbsInput sampleInput() {
+    return {
+        8,
+        5,
+        100,
+        {
+            "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA",
+            "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
+            "TAGTACCGAGACCGAAAGAAGTATACAGGCGT",
+            "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
+            "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+        }
     };
+}
 
-    if (argc >= 4) {
-        k = std::stoul(argv[1]);
-        t = std::stoul(argv[2]);
-        N = std::stoul(argv[3]);
-        dna.clear();
-        for (int i = 4; i < argc; ++i)
-            dna.push_back(argv[i]);
-    } else {
-        std::cout << "No arguments provided. Using sample dataset...\n";
+bool isReadableFile(const std::string& path) {
+    std::ifstream input(path);
+    return input.good();
+}
+
+size_t parseSizeT(const std::string& value, const std::string& name) {
+    size_t pos = 0;
+    unsigned long parsed = 0;
+
+    try {
+        parsed = std::stoul(value, &pos);
+    } catch (const std::exception&) {
+        throw std::invalid_argument("Invalid numeric value for " + name + ": " + value);
     }
 
-    auto motifs = gibbsSampler(dna, k, t, N);
-    for (const auto& m : motifs)
-        std::cout << m << std::endl;
+    if (pos != value.size())
+        throw std::invalid_argument("Invalid numeric value for " + name + ": " + value);
 
-    return 0;
+    return static_cast<size_t>(parsed);
+}
+
+CliOptions parseCli(int argc, char* argv[]) {
+    CliOptions options;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+
+        if (arg == "--input" || arg == "-i") {
+            if (i + 1 >= argc)
+                throw std::invalid_argument("Missing value after --input");
+            options.inputPath = argv[++i];
+            continue;
+        }
+
+        if (arg == "--output" || arg == "-o") {
+            if (i + 1 >= argc)
+                throw std::invalid_argument("Missing value after --output");
+            options.outputPath = argv[++i];
+            continue;
+        }
+
+        options.positional.push_back(arg);
+    }
+
+    if (options.inputPath.empty() && options.positional.size() == 1 &&
+        isReadableFile(options.positional[0])) {
+        options.inputPath = options.positional[0];
+        options.positional.clear();
+    }
+
+    if (!options.inputPath.empty() && !options.positional.empty())
+        throw std::invalid_argument("Use either Rosalind-style positional arguments or an input file, not both");
+
+    return options;
+}
+
+GibbsInput parseInputFile(const std::string& path) {
+    std::ifstream input(path);
+    if (!input)
+        throw std::runtime_error("Cannot open input file: " + path);
+
+    GibbsInput data{};
+    if (!(input >> data.k >> data.t >> data.N))
+        throw std::runtime_error("Expected first line in Rosalind format: k t N");
+
+    std::string dnaString;
+    while (input >> dnaString)
+        data.dna.push_back(dnaString);
+
+    return data;
+}
+
+GibbsInput parsePositionalArgs(const std::vector<std::string>& positional) {
+    if (positional.size() < 4)
+        throw std::invalid_argument("Expected Rosalind-style arguments: k t N dna1 dna2 ...");
+
+    GibbsInput data{};
+    data.k = parseSizeT(positional[0], "k");
+    data.t = parseSizeT(positional[1], "t");
+    data.N = parseSizeT(positional[2], "N");
+    data.dna.assign(positional.begin() + 3, positional.end());
+    return data;
+}
+
+void validateInput(const GibbsInput& data) {
+    if (data.k == 0)
+        throw std::invalid_argument("k must be greater than 0");
+    if (data.t == 0)
+        throw std::invalid_argument("t must be greater than 0");
+    if (data.N == 0)
+        throw std::invalid_argument("N must be greater than 0");
+    if (data.dna.empty())
+        throw std::invalid_argument("At least one DNA string is required");
+    if (data.dna.size() != data.t) {
+        throw std::invalid_argument(
+            "The number of DNA strings does not match t: expected " + std::to_string(data.t) +
+            ", got " + std::to_string(data.dna.size())
+        );
+    }
+
+    for (size_t i = 0; i < data.dna.size(); ++i) {
+        if (data.dna[i].size() < data.k) {
+            throw std::invalid_argument(
+                "DNA string #" + std::to_string(i + 1) + " is shorter than k"
+            );
+        }
+    }
+}
+
+std::string resolveOutputPath(const CliOptions& options) {
+    if (!options.outputPath.empty())
+        return options.outputPath;
+    if (!options.inputPath.empty())
+        return options.inputPath + ".out";
+    return "gibbs_sampler_output.txt";
+}
+
+void writeOutputFile(const std::vector<std::string>& motifs, const std::string& outputPath) {
+    std::ofstream output(outputPath);
+    if (!output)
+        throw std::runtime_error("Cannot open output file: " + outputPath);
+
+    for (const auto& motif : motifs)
+        output << motif << '\n';
+}
+
+int main(int argc, char* argv[]) {
+    try {
+        CliOptions options = parseCli(argc, argv);
+        GibbsInput input = sampleInput();
+
+        if (!options.inputPath.empty()) {
+            input = parseInputFile(options.inputPath);
+        } else if (!options.positional.empty()) {
+            input = parsePositionalArgs(options.positional);
+        } else {
+            std::cerr << "No input provided. Using sample dataset.\n";
+        }
+
+        validateInput(input);
+
+        auto motifs = gibbsSampler(input.dna, input.k, input.t, input.N);
+        std::string outputPath = resolveOutputPath(options);
+        writeOutputFile(motifs, outputPath);
+
+        for (const auto& motif : motifs)
+            std::cout << motif << '\n';
+
+        std::cerr << "Saved output to " << outputPath << '\n';
+        return 0;
+    } catch (const std::exception& error) {
+        std::cerr << "Error: " << error.what() << '\n';
+        std::cerr << "Usage:\n";
+        std::cerr << "  ./gibbs_sampler [--input input.txt] [--output output.txt]\n";
+        std::cerr << "  ./gibbs_sampler [--output output.txt] k t N dna1 dna2 ... dna_t\n";
+        std::cerr << "  ./gibbs_sampler input.txt [--output output.txt]\n";
+        return 1;
+    }
 }

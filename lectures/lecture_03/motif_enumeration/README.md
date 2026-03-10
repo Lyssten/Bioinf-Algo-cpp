@@ -4,8 +4,30 @@
 
 Найти все (k,d)-мотивы в коллекции ДНК-строк.
 
-**Вход:** целые числа k, d и набор строк Dna
-**Выход:** все k-меры, встречающиеся в каждой строке из Dna с ≤ d несовпадениями
+**Вход:** целые числа `k`, `d` и набор строк `Dna`
+**Выход:** все k-меры, встречающиеся в каждой строке из `Dna` с ≤ `d` несовпадениями
+
+Где:
+- `k` — длина искомого мотива
+- `d` — максимально допустимое число несовпадений
+- `Dna` — коллекция ДНК-строк
+
+Формат входного файла Rosalind:
+```text
+k d
+dna1
+dna2
+...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `k d dna1 dna2 ...`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `motif_enumeration_output.txt`
 
 **Пример:**
 ```
@@ -129,12 +151,15 @@ if (argc >= 3) {
 ## Запуск
 
 ```bash
-# Без аргументов — тестовые данные
-./motif_enumeration
+# Rosalind-style аргументы
+./motif_enumeration --output answer.txt 3 1 \
+  "ATTTGGC" "TGCCTTA" "CGGTATC" "GAAAATT"
 
-# Аргументы: <k> <d> <dna1> <dna2> ...
-./motif_enumeration 3 1 "ATTTGGC" "TGCCTTA" "CGGTATC" "GAAAATT"
-# Вывод: ATA ATT GTT TTT
+# Входной файл в формате Rosalind
+./motif_enumeration --input rosalind_ba2a.txt --output rosalind_ba2a.out
+
+# Короткая форма: один путь трактуется как входной файл
+./motif_enumeration rosalind_ba2a.txt
 ```
 
 ## Сложность

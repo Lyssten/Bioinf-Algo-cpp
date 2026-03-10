@@ -4,8 +4,33 @@
 
 Найти k-мер в строке с максимальной вероятностью по заданной профильной матрице.
 
-**Вход:** строка Text, число k, профильная матрица 4×k
-**Выход:** k-мер из Text с наибольшей вероятностью
+**Вход:** строка `Text`, число `k`, профильная матрица `4×k`
+**Выход:** k-мер из `Text` с наибольшей вероятностью
+
+Где:
+- `Text` — строка, в которой ищется лучший k-мер
+- `k` — длина искомого k-мера
+- `Profile` — матрица вероятностей размера `4×k`
+- строки `Profile` идут в порядке `A`, `C`, `G`, `T`
+
+Формат входного файла Rosalind:
+```text
+Text
+k
+row_A
+row_C
+row_G
+row_T
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `Text k "row_A" "row_C" "row_G" "row_T"`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `profile_most_probable_output.txt`
 
 **Пример:**
 ```
@@ -132,8 +157,19 @@ double maxProb = -1.0;
 ## Запуск
 
 ```bash
-./profile_most_probable "ACCTGTTT..." 5 "0.2 0.2 0.3 0.2 0.3" "0.4 0.3 0.1 0.5 0.1" "0.3 0.3 0.5 0.2 0.4" "0.1 0.2 0.1 0.1 0.2"
-# Вывод: CCGAG
+# Rosalind-style аргументы
+./profile_most_probable --output answer.txt \
+  "ACCTGTTTATTGCCTAAGTTCCGAACAAACCCAATATAGCCCGAGGGCCT" 5 \
+  "0.2 0.2 0.3 0.2 0.3" \
+  "0.4 0.3 0.1 0.5 0.1" \
+  "0.3 0.3 0.5 0.2 0.4" \
+  "0.1 0.2 0.1 0.1 0.2"
+
+# Входной файл в формате Rosalind
+./profile_most_probable --input rosalind_ba2c.txt --output rosalind_ba2c.out
+
+# Короткая форма: один путь трактуется как входной файл
+./profile_most_probable rosalind_ba2c.txt
 ```
 
 ## Сложность

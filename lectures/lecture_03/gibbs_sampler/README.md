@@ -4,8 +4,31 @@
 
 Найти набор мотивов алгоритмом Гиббса.
 
-**Вход:** целые числа k, t, N и набор строк Dna
-**Выход:** лучший набор мотивов за 20 запусков GibbsSampler по N итераций каждый
+**Вход:** целые числа `k`, `t`, `N` и набор строк `Dna`
+**Выход:** лучший набор мотивов за 20 запусков `GibbsSampler` по `N` итераций каждый
+
+Где:
+- `k` — длина искомого мотива
+- `t` — количество строк в коллекции `Dna`
+- `N` — число итераций внутри одного запуска Gibbs Sampler
+- `Dna` — набор ДНК-строк
+
+Формат входного файла Rosalind:
+```text
+k t N
+dna1
+dna2
+...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `k t N dna1 dna2 ... dna_t`
+- путь к входному файлу в формате Rosalind, где первая строка содержит `k t N`, а дальше идут строки `Dna`
+
+Результат печатается в `stdout` и одновременно сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `gibbs_sampler_output.txt`
 
 **Пример:**
 ```
@@ -156,7 +179,19 @@ return text.substr(text.size() - k, k);  // fallback
 ## Запуск
 
 ```bash
-./gibbs_sampler 8 5 100 "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA" "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG" ...
+# Rosalind-style аргументы
+./gibbs_sampler --output answer.txt 8 5 100 \
+  "CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA" \
+  "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG" \
+  "TAGTACCGAGACCGAAAGAAGTATACAGGCGT" \
+  "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC" \
+  "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"
+
+# Входной файл в формате Rosalind
+./gibbs_sampler --input rosalind_ba2g.txt --output rosalind_ba2g.out
+
+# Короткая форма: если передан один путь, программа считает его входным файлом
+./gibbs_sampler rosalind_ba2g.txt
 ```
 
 ## Сложность

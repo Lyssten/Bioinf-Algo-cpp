@@ -4,8 +4,30 @@
 
 Найти k-мер, минимизирующий суммарное расстояние до коллекции ДНК-строк.
 
-**Вход:** целое число k и набор строк Dna
-**Выход:** k-мер Pattern, минимизирующий d(Pattern, Dna)
+**Вход:** целое число `k` и набор строк `Dna`
+**Выход:** k-мер `Pattern`, минимизирующий `d(Pattern, Dna)`
+
+Где:
+- `k` — длина искомого мотива
+- `Dna` — коллекция ДНК-строк
+- `Pattern` — кандидат на медианную строку длины `k`
+
+Формат входного файла Rosalind:
+```text
+k
+dna1
+dna2
+...
+```
+
+Программа поддерживает два режима:
+- Rosalind-style аргументы: `k dna1 dna2 ...`
+- путь к входному файлу в формате Rosalind
+
+Результат печатается в `stdout` и сохраняется в файл:
+- при `--output <path>` — в указанный путь
+- при запуске от входного файла без `--output` — в `<input>.out`
+- при запуске от аргументов или sample dataset без `--output` — в `median_string_output.txt`
 
 **Пример:**
 ```
@@ -108,8 +130,15 @@ for (int64_t i = 0; i < total; ++i) {
 ## Запуск
 
 ```bash
-./median_string 3 "AAATTGACGCAT" "GACGACCACGTT" "CGTCAGCGCCTG" "GCTGAGCACCGG" "AGTACGGGACAG"
-# Вывод: GAC (или другой k-мер с тем же минимальным расстоянием)
+# Rosalind-style аргументы
+./median_string --output answer.txt 3 \
+  "AAATTGACGCAT" "GACGACCACGTT" "CGTCAGCGCCTG" "GCTGAGCACCGG" "AGTACGGGACAG"
+
+# Входной файл в формате Rosalind
+./median_string --input rosalind_ba2b.txt --output rosalind_ba2b.out
+
+# Короткая форма: один путь трактуется как входной файл
+./median_string rosalind_ba2b.txt
 ```
 
 ## Сложность
