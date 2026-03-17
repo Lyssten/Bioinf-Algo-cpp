@@ -26,14 +26,21 @@ cpp/
     │   ├── frequency_array/
     │   ├── d_neighborhood/
     │   └── frequent_words_mismatches_complements/
-    └── lecture_03/           # Поиск мотивов
-        ├── motif_enumeration/
-        ├── median_string/
-        ├── profile_most_probable/
-        ├── distance_pattern_strings/
-        ├── greedy_motif_search/
-        ├── randomized_motif_search/
-        └── gibbs_sampler/
+    ├── lecture_03/           # Поиск мотивов
+    │   ├── motif_enumeration/
+    │   ├── median_string/
+    │   ├── profile_most_probable/
+    │   ├── distance_pattern_strings/
+    │   ├── greedy_motif_search/
+    │   ├── randomized_motif_search/
+    │   └── gibbs_sampler/
+    └── lecture_04/           # Графовые алгоритмы
+        ├── ba3a-string_composition/
+        ├── ba3b-genome_path_string/
+        ├── ba3c-overlap_graph/
+        ├── ba3d-de_bruijn_string/
+        ├── ba3e-de_bruijn_kmers/
+        └── ba3f-eulerian_cycle/
 ```
 
 ## Сборка
@@ -87,6 +94,14 @@ cd cpp
 ./lectures/lecture_03/greedy_motif_search/greedy_motif_search lectures/lecture_03/greedy_motif_search/rosalind_ba2e.txt
 ./lectures/lecture_03/randomized_motif_search/randomized_motif_search lectures/lecture_03/randomized_motif_search/rosalind_ba2f.txt
 ./lectures/lecture_03/gibbs_sampler/gibbs_sampler lectures/lecture_03/gibbs_sampler/rosalind_ba2g.txt
+
+# Lecture 04
+./lectures/lecture_04/ba3a-string_composition/ba3a-string_composition rosalind_ba3a.txt
+./lectures/lecture_04/ba3b-genome_path_string/ba3b-genome_path_string rosalind_ba3b.txt
+./lectures/lecture_04/ba3c-overlap_graph/ba3c-overlap_graph rosalind_ba3c.txt
+./lectures/lecture_04/ba3d-de_bruijn_string/ba3d-de_bruijn_string rosalind_ba3d.txt
+./lectures/lecture_04/ba3e-de_bruijn_kmers/ba3e-de_bruijn_kmers rosalind_ba3e.txt
+./lectures/lecture_04/ba3f-eulerian_cycle/ba3f-eulerian_cycle rosalind_ba3f.txt
 ```
 
 Начиная с `lecture_03`, задачи принимают Rosalind-вход через `--input <path>` или просто путь к файлу как единственный аргумент. При необходимости можно явно задать выходной файл через `--output <path>`.
@@ -141,3 +156,14 @@ cd cpp
 | [Greedy Motif Search](lectures/lecture_03/greedy_motif_search/README.md) | Жадный поиск с псевдосчётчиками |
 | [Randomized Motif Search](lectures/lecture_03/randomized_motif_search/README.md) | Рандомизированный поиск мотивов |
 | [Gibbs Sampler](lectures/lecture_03/gibbs_sampler/README.md) | Семплирование Гиббса |
+
+### Lecture 04: Графовые алгоритмы
+
+| Задача | Описание |
+|--------|----------|
+| [String Composition](lectures/lecture_04/ba3a-string_composition/README.md) | k-мер композиция строки |
+| [Genome Path String](lectures/lecture_04/ba3b-genome_path_string/README.md) | Реконструкция строки из пути генома |
+| [Overlap Graph](lectures/lecture_04/ba3c-overlap_graph/README.md) | Граф перекрытий k-меров |
+| [De Bruijn Graph (String)](lectures/lecture_04/ba3d-de_bruijn_string/README.md) | Граф де Брёйна строки |
+| [De Bruijn Graph (k-mers)](lectures/lecture_04/ba3e-de_bruijn_kmers/README.md) | Граф де Брёйна k-меров |
+| [Eulerian Cycle](lectures/lecture_04/ba3f-eulerian_cycle/README.md) | Эйлеров цикл в графе |

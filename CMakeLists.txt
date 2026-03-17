@@ -50,3 +50,11 @@ add_bioinf_task(lectures/lecture_03/distance_pattern_strings distance_pattern_st
 add_bioinf_task(lectures/lecture_03/greedy_motif_search greedy_motif_search)
 add_bioinf_task(lectures/lecture_03/randomized_motif_search randomized_motif_search)
 add_bioinf_task(lectures/lecture_03/gibbs_sampler gibbs_sampler)
+
+# Lecture 04: Graph algorithms
+add_bioinf_task(lectures/lecture_04/ba3a-string_composition ba3a-string_composition)
+add_bioinf_task(lectures/lecture_04/ba3b-genome_path_string ba3b-genome_path_string)
+add_bioinf_task(lectures/lecture_04/ba3c-overlap_graph ba3c-overlap_graph)
+add_bioinf_task(lectures/lecture_04/ba3d-de_bruijn_string ba3d-de_bruijn_string)
+add_bioinf_task(lectures/lecture_04/ba3e-de_bruijn_kmers ba3e-de_bruijn_kmers)
+add_bioinf_task(lectures/lecture_04/ba3f-eulerian_cycle ba3f-eulerian_cycle)

@@ -39,7 +39,14 @@ lectures/lecture_03/distance_pattern_strings/distance_pattern_strings
 lectures/lecture_03/greedy_motif_search/greedy_motif_search
 lectures/lecture_03/randomized_motif_search/randomized_motif_search
 lectures/lecture_03/gibbs_sampler/gibbs_sampler
+lectures/lecture_04/ba3a-string_composition/ba3a-string_composition
+lectures/lecture_04/ba3b-genome_path_string/ba3b-genome_path_string
+lectures/lecture_04/ba3c-overlap_graph/ba3c-overlap_graph
+lectures/lecture_04/ba3d-de_bruijn_string/ba3d-de_bruijn_string
+lectures/lecture_04/ba3e-de_bruijn_kmers/ba3e-de_bruijn_kmers
+lectures/lecture_04/ba3f-eulerian_cycle/ba3f-eulerian_cycle
 
 # Generated answer files
+*_output.txt
 lectures/**/rosalind_*.out
 lectures/**/rosalind_*.txt.out
