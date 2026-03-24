@@ -34,13 +34,21 @@ cpp/
     │   ├── greedy_motif_search/
     │   ├── randomized_motif_search/
     │   └── gibbs_sampler/
-    └── lecture_04/           # Графовые алгоритмы
-        ├── ba3a-string_composition/
-        ├── ba3b-genome_path_string/
-        ├── ba3c-overlap_graph/
-        ├── ba3d-de_bruijn_string/
-        ├── ba3e-de_bruijn_kmers/
-        └── ba3f-eulerian_cycle/
+    ├── lecture_04/           # Графовые алгоритмы
+    │   ├── ba3a-string_composition/
+    │   ├── ba3b-genome_path_string/
+    │   ├── ba3c-overlap_graph/
+    │   ├── ba3d-de_bruijn_string/
+    │   ├── ba3e-de_bruijn_kmers/
+    │   └── ba3f-eulerian_cycle/
+    └── lecture_05/           # Графовые алгоритмы (продолжение)
+        ├── ba3g-eulerian_path/
+        ├── ba3h-reconstruct_from_kmers/
+        ├── ba3i-k_universal_circular/
+        ├── ba3j-reconstruct_from_pairs/
+        ├── ba3k-generate_contigs/
+        ├── ba3l-gapped_genome_path/
+        └── ba3m-maximal_nonbranching_paths/
 ```
 
 ## Сборка
@@ -102,6 +110,15 @@ cd cpp
 ./lectures/lecture_04/ba3d-de_bruijn_string/ba3d-de_bruijn_string rosalind_ba3d.txt
 ./lectures/lecture_04/ba3e-de_bruijn_kmers/ba3e-de_bruijn_kmers rosalind_ba3e.txt
 ./lectures/lecture_04/ba3f-eulerian_cycle/ba3f-eulerian_cycle rosalind_ba3f.txt
+
+# Lecture 05
+./lectures/lecture_05/ba3g-eulerian_path/ba3g-eulerian_path rosalind_ba3g.txt
+./lectures/lecture_05/ba3h-reconstruct_from_kmers/ba3h-reconstruct_from_kmers rosalind_ba3h.txt
+./lectures/lecture_05/ba3i-k_universal_circular/ba3i-k_universal_circular 4
+./lectures/lecture_05/ba3j-reconstruct_from_pairs/ba3j-reconstruct_from_pairs rosalind_ba3j.txt
+./lectures/lecture_05/ba3k-generate_contigs/ba3k-generate_contigs rosalind_ba3k.txt
+./lectures/lecture_05/ba3l-gapped_genome_path/ba3l-gapped_genome_path rosalind_ba3l.txt
+./lectures/lecture_05/ba3m-maximal_nonbranching_paths/ba3m-maximal_nonbranching_paths rosalind_ba3m.txt
 ```
 
 Начиная с `lecture_03`, задачи принимают Rosalind-вход через `--input <path>` или просто путь к файлу как единственный аргумент. При необходимости можно явно задать выходной файл через `--output <path>`.
@@ -167,3 +184,15 @@ cd cpp
 | [De Bruijn Graph (String)](lectures/lecture_04/ba3d-de_bruijn_string/README.md) | Граф де Брёйна строки |
 | [De Bruijn Graph (k-mers)](lectures/lecture_04/ba3e-de_bruijn_kmers/README.md) | Граф де Брёйна k-меров |
 | [Eulerian Cycle](lectures/lecture_04/ba3f-eulerian_cycle/README.md) | Эйлеров цикл в графе |
+
+### Lecture 05: Графовые алгоритмы (продолжение)
+
+| Задача | Описание |
+|--------|----------|
+| [Eulerian Path](lectures/lecture_05/ba3g-eulerian_path/README.md) | Эйлеров путь в графе |
+| [Reconstruct from k-mers](lectures/lecture_05/ba3h-reconstruct_from_kmers/README.md) | Сборка строки из k-меров |
+| [k-Universal Circular](lectures/lecture_05/ba3i-k_universal_circular/README.md) | k-универсальная циклическая строка |
+| [Reconstruct from Pairs](lectures/lecture_05/ba3j-reconstruct_from_pairs/README.md) | Сборка из парных чтений |
+| [Generate Contigs](lectures/lecture_05/ba3k-generate_contigs/README.md) | Генерация контигов |
+| [Gapped Genome Path](lectures/lecture_05/ba3l-gapped_genome_path/README.md) | Строка из пути с пропусками |
+| [Maximal Non-Branching Paths](lectures/lecture_05/ba3m-maximal_nonbranching_paths/README.md) | Максимальные неветвящиеся пути |
