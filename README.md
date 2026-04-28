@@ -41,14 +41,21 @@ cpp/
     │   ├── ba3d-de_bruijn_string/
     │   ├── ba3e-de_bruijn_kmers/
     │   └── ba3f-eulerian_cycle/
-    └── lecture_05/           # Графовые алгоритмы (продолжение)
-        ├── ba3g-eulerian_path/
-        ├── ba3h-reconstruct_from_kmers/
-        ├── ba3i-k_universal_circular/
-        ├── ba3j-reconstruct_from_pairs/
-        ├── ba3k-generate_contigs/
-        ├── ba3l-gapped_genome_path/
-        └── ba3m-maximal_nonbranching_paths/
+    ├── lecture_05/           # Графовые алгоритмы (продолжение)
+    │   ├── ba3g-eulerian_path/
+    │   ├── ba3h-reconstruct_from_kmers/
+    │   ├── ba3i-k_universal_circular/
+    │   ├── ba3j-reconstruct_from_pairs/
+    │   ├── ba3k-generate_contigs/
+    │   ├── ba3l-gapped_genome_path/
+    │   └── ba3m-maximal_nonbranching_paths/
+    └── lecture_06/           # Парное выравнивание
+        ├── ba5f-local_alignment/
+        ├── ba5i-overlap_alignment/
+        ├── ba5j-affine_gap_alignment/
+        ├── ba5k-middle_edge/
+        ├── ba5l-linear_space_alignment/
+        └── ba5m-multiple_alignment/
 ```
 
 ## Сборка
@@ -119,6 +126,14 @@ cd cpp
 ./lectures/lecture_05/ba3k-generate_contigs/ba3k-generate_contigs rosalind_ba3k.txt
 ./lectures/lecture_05/ba3l-gapped_genome_path/ba3l-gapped_genome_path rosalind_ba3l.txt
 ./lectures/lecture_05/ba3m-maximal_nonbranching_paths/ba3m-maximal_nonbranching_paths rosalind_ba3m.txt
+
+# Lecture 06
+./lectures/lecture_06/ba5f-local_alignment/ba5f-local_alignment rosalind_ba5f.txt
+./lectures/lecture_06/ba5i-overlap_alignment/ba5i-overlap_alignment rosalind_ba5i.txt
+./lectures/lecture_06/ba5j-affine_gap_alignment/ba5j-affine_gap_alignment rosalind_ba5j.txt
+./lectures/lecture_06/ba5k-middle_edge/ba5k-middle_edge rosalind_ba5k.txt
+./lectures/lecture_06/ba5l-linear_space_alignment/ba5l-linear_space_alignment rosalind_ba5l.txt
+./lectures/lecture_06/ba5m-multiple_alignment/ba5m-multiple_alignment rosalind_ba5m.txt
 ```
 
 Начиная с `lecture_03`, задачи принимают Rosalind-вход через `--input <path>` или просто путь к файлу как единственный аргумент. При необходимости можно явно задать выходной файл через `--output <path>`.
@@ -196,3 +211,14 @@ cd cpp
 | [Generate Contigs](lectures/lecture_05/ba3k-generate_contigs/README.md) | Генерация контигов |
 | [Gapped Genome Path](lectures/lecture_05/ba3l-gapped_genome_path/README.md) | Строка из пути с пропусками |
 | [Maximal Non-Branching Paths](lectures/lecture_05/ba3m-maximal_nonbranching_paths/README.md) | Максимальные неветвящиеся пути |
+
+### Lecture 06: Парное выравнивание
+
+| Задача | Описание |
+|--------|----------|
+| [Local Alignment](lectures/lecture_06/ba5f-local_alignment/README.md) | Локальное выравнивание (Smith–Waterman, PAM250) |
+| [Overlap Alignment](lectures/lecture_06/ba5i-overlap_alignment/README.md) | Overlap-выравнивание (суффикс v ↔ префикс w) |
+| [Affine Gap Alignment](lectures/lecture_06/ba5j-affine_gap_alignment/README.md) | Глобальное выравнивание с аффинным штрафом за гэп (BLOSUM62) |
+| [Middle Edge](lectures/lecture_06/ba5k-middle_edge/README.md) | Среднее ребро в линейной памяти (BLOSUM62) |
+| [Linear Space Alignment](lectures/lecture_06/ba5l-linear_space_alignment/README.md) | Глобальное выравнивание в линейной памяти — Hirschberg |
+| [Multiple Alignment](lectures/lecture_06/ba5m-multiple_alignment/README.md) | Множественное выравнивание трёх строк (3D-DP) |

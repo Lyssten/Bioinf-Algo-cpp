@@ -67,3 +67,11 @@ add_bioinf_task(lectures/lecture_05/ba3j-reconstruct_from_pairs ba3j-reconstruct
 add_bioinf_task(lectures/lecture_05/ba3k-generate_contigs ba3k-generate_contigs)
 add_bioinf_task(lectures/lecture_05/ba3l-gapped_genome_path ba3l-gapped_genome_path)
 add_bioinf_task(lectures/lecture_05/ba3m-maximal_nonbranching_paths ba3m-maximal_nonbranching_paths)
+
+# Lecture 06: Pairwise alignment
+add_bioinf_task(lectures/lecture_06/ba5f-local_alignment ba5f-local_alignment)
+add_bioinf_task(lectures/lecture_06/ba5i-overlap_alignment ba5i-overlap_alignment)
+add_bioinf_task(lectures/lecture_06/ba5j-affine_gap_alignment ba5j-affine_gap_alignment)
+add_bioinf_task(lectures/lecture_06/ba5k-middle_edge ba5k-middle_edge)
+add_bioinf_task(lectures/lecture_06/ba5l-linear_space_alignment ba5l-linear_space_alignment)
+add_bioinf_task(lectures/lecture_06/ba5m-multiple_alignment ba5m-multiple_alignment)
